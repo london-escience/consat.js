@@ -25,19 +25,18 @@
   },
   "homepage": "https://github.com/london-escience/consat.js#readme",
   "dependencies": {
-    "webpack": "3.10.0",
     "babel-cli": "6.26.0",
     "babel-core": "6.26.0",
     "babel-preset-env": "1.6.1",
     "babel-loader": "7.1.2",
     "eslint": "4.12.1",
-    "eslint-loader": "1.9.0"
-  },
-  "devDependencies": {
+    "eslint-loader": "1.9.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.6.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-plugin-standard": "^3.0.1",
+    "loglevel":"1.6.0",
+    "webpack": "3.10.0"
   }
 }
