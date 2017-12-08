@@ -1,11 +1,14 @@
 module.exports = {
     "extends": "standard",
     "rules":{
-	"indent": ["error", 4],
+        "brace-style": ["error", "stroustrup"],
+        "indent": ["error", 4],
+        "keyword-spacing": "off",
+        "no-unused-vars": "warn",
         "padded-blocks": ["error", {"classes":"always", "blocks":"never" }],
         "semi": ["error", "always"],
         "space-before-function-paren": ["error", "never"],
-        "keyword-spacing": "off",
-        "brace-style": ["error", "stroustrup"],
+        
+        
     }
 };

@@ -62,6 +62,10 @@ class Constraint {
         return this.v1.getName();
     }
 
+    getV1Id() {
+        return this.v1.getId();
+    }
+
     getV2() {
         return this.v2;
     }
@@ -70,18 +74,25 @@ class Constraint {
         return this.v2.getName();
     }
 
-    getTargetValues(vName, vValue) {
+    getV2Id() {
+        return this.v2.getId();
+    }
+
+    /**
+     * Get all the 
+     */
+    getTargetValues(vId, vValue) {
         // Check whether we've been passed a value for var1 or var2 and then
         // get the corresponding values from the relevant mapping
-        if(vName === this.v1.getName()) {
-            if(!(vName in this.mappingsV1toV2)) {
+        if(vId === this.v1.getId()) {
+            if(!(vValue in this.mappingsV1toV2)) {
                 throw CSPSolverValueException('The specified value is not ' +
                         'a valid value for the variable named.');
             }
             return this.mappingsV1toV2[vValue];
         }
-        else if(vName === this.v2.getName()) {
-            if(!(vName in this.mappingsV2toV1)) {
+        else if(vId === this.v2.getId()) {
+            if(!(vValue in this.mappingsV2toV1)) {
                 throw CSPSolverValueException('The specified value is not ' +
                         'a valid value for the variable named.');
             }

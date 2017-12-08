@@ -13,4 +13,8 @@ class BaseException {
 
 }
 
-export class CSPSolverValueException extends BaseException {};
+class CSPSolverValueException extends BaseException {};
+
+class VariableValueException extends BaseException {};
+
+export { CSPSolverValueException, VariableValueException };

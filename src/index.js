@@ -42,6 +42,48 @@ class CSPSolver {
         this._variables.push(c);
     }
 
+    /**
+     * The solve function is not implemented here - an implementation of
+     * solve must be provided in subclasses of this CSPSolver class
+     */
+    solve() {
+        // This is a placeholder function - implement in subclasses
+    }
+
+    /**
+     * Check if the provided assignment - an instance of the Assignment class
+     * is consistent - that is, it does not violate any constraints. Note
+     * that this does not mean that the assignment is complete, some
+     * variables may still be unassigned.
+     */
+    isConsistent(assignment) {
+        // Check through each of the constraints to see if we have variables.
+        const varList = assignment.getVarList();
+        // Create a map containing the constraints for each variable.
+    }
+
+    /**
+     * Check if the provided assignment is a solution. An assignment that is
+     * a solution is one that is complete (i.e. all variables have values)
+     * and where all constraints are satisfied.
+     */
+    completeAssignment(assignment) {
+        const varList = assignment.getVarList();
+        for(const v in varList) {
+            if(v.getValue() === null) return false;
+        }
+        return true;
+    }
+
+    /**
+     * Check if the provided assignment is a solution. An assignment that is
+     * a solution is one that is complete (i.e. all variables have values)
+     * and where all constraints are satisfied.
+     */
+    isSolution(assignment) {
+        return completeAssignment(assignment) && isConsistent(assignment);
+    }
+
 }
 
-export default CSPSolver;
+export { CSPSolver, Variable, Constraint };

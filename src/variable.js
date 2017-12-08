@@ -4,14 +4,23 @@
  *
  * The variable has a name, a domain and an optional value.
  */
+import uuid from 'uuid/v1.js';
 import CSPSolverValueException from './exceptions';
 
 class Variable {
 
-    constructor(name, domain, value = null) {
+    constructor(name, domain, value = null, id = null) {
+        // Assign the variable a unique ID
+        if(id === null) this.id = uuid();
+        else this.id = id;
+
         this.name = name;
         this.domain = domain;
         this.value = value;
+    }
+
+    getId() {
+        return this.id;
     }
 
     getName() {
@@ -38,6 +47,13 @@ class Variable {
 
     valueInDomain(value) {
         return this.domain.includes(value);
+    }
+
+    /**
+     * Create a new Variable object from an existing one
+     */
+    static fromVariable(v) {
+        return new Variable(v.getName(), v.getDomain(), v.getValue());
     }
 
 }
