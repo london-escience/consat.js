@@ -17,4 +17,7 @@ class CSPSolverValueException extends BaseException {};
 
 class VariableValueException extends BaseException {};
 
-export { CSPSolverValueException, VariableValueException };
+class InvalidVariableException extends BaseException {};
+
+export { CSPSolverValueException, VariableValueException,
+         InvalidVariableException };
