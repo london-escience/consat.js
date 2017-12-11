@@ -1,23 +1,38 @@
 /**
  * Custom exceptions for use in the CSPSolver.
  */
-class BaseException {
 
-    constructor(message) {
-        this.message = message;
+class CSPSolverValueError extends Error {
+
+    constructor(...params) {
+        super(...params);
     }
 
-    toString() {
-        return this.message;
+};
+
+class VariableValueError extends Error {
+
+    constructor(...params) {
+        super(...params);
     }
 
-}
+};
 
-class CSPSolverValueException extends BaseException {};
+class InvalidVariableError extends Error {
 
-class VariableValueException extends BaseException {};
+    constructor(...params) {
+        super(...params);
+    }
 
-class InvalidVariableException extends BaseException {};
+};
 
-export { CSPSolverValueException, VariableValueException,
-         InvalidVariableException };
+class NotImplementedError extends Error {
+
+    constructor(...params) {
+        super(...params);
+    }
+
+};
+
+export { CSPSolverValueError, VariableValueError, InvalidVariableError, 
+    NotImplementedError };

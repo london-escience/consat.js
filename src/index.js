@@ -10,6 +10,7 @@
  */
 import Variable from './variable';
 import Constraint from './constraint';
+import { NotImplementedException, InvalidVariableException } from './exceptions';
 import * as log from 'loglevel';
 
 class CSPSolver {
@@ -47,10 +48,10 @@ class CSPSolver {
         this._variables.push(c);
         // Add entry to the varConstraintsMap for the variables that this
         // constraint is involved with.
-        if( !(c.getV1Id() in this.varConstraintMap) ) {
+        if(!(c.getV1Id() in this.varConstraintMap)) {
             this.varConstraintMap[c.getV1Id()] = [];
         }
-        if( !(c.getV2Id() in this.varConstraintMap) ) {
+        if(!(c.getV2Id() in this.varConstraintMap)) {
             this.varConstraintMap[c.getV2Id()] = [];
         }
         this.varConstraintMap[c.getV1Id()].push(c);
@@ -62,7 +63,9 @@ class CSPSolver {
      * solve must be provided in subclasses of this CSPSolver class
      */
     solve() {
-        // This is a placeholder function - implement in subclasses
+        throw NotImplementedException('solve() is not implemented in this ' +
+                'abstract class - use a concrete subclass providing a ' +
+                'solver implementation.');
     }
 
     /**
@@ -74,11 +77,11 @@ class CSPSolver {
     isConsistent(assignment) {
         // Check through each of the constraints to see if we have variables.
         const varList = assignment.getVarList();
-        const assignedVarMap = {}
+        const assignedVarMap = {};
         for(const v in varList) {
-            // If the variable provided is not in our list of variables for 
+            // If the variable provided is not in our list of variables for
             // this solve, then we throw an error.
-            if( !(v.getId() in this._variables) ) { 
+            if(!(v.getId() in this._variables)) {
                 throw InvalidVariableException('Variable found in the ' +
                     'assigned variables with ID [' + v.getId() + '] and ' +
                     'name [' + v.getName() + '] is not registered for ' +
@@ -87,10 +90,10 @@ class CSPSolver {
             assignedVarMap[v.getId()] = v;
         }
         for(const v in varList) {
-            // If this variable is not present in any constraints then we  
+            // If this variable is not present in any constraints then we
             // can ignore it and continue with the next variable. We can also
             // ignore the variable if it is unset (i.e. value is null)
-            if( (!(variable.getId() in this.varConstraintMap)) || 
+            if((!(v.getId() in this.varConstraintMap)) ||
                     v.getValue === null) continue;
 
             // For a variable that exists in the constraint map, we need to
@@ -99,24 +102,22 @@ class CSPSolver {
             const relatedConstraints = this.varConstraintMap[v.getId()];
             for(const relConst in relatedConstraints) {
                 let otherVar = null;
-                if(relConst.getV1Id() === v.getId())
+                if(relConst.getV1Id() === v.getId()) {
                     otherVar = relConst.getV2();
-                else
-                    otherVar = relConst.getV1();
-                if(otherVar !== null) {
-                    if(!(otherVar.getValue() in relConst.getTargetValues(
-                            v.getId(), v.getValue()))) {
-                        log.debug('The value of the corresponding ' +
-                              'variable in this constraint is not valid.');  
-                        return false;
-                    }
                 }
-                
+                else {
+                    otherVar = relConst.getV1();
+                }
+
+                if(!(otherVar.getValue() in relConst.getTargetValues(
+                    v.getId(), v.getValue()))) {
+                    log.debug('The value of the corresponding ' +
+                            'variable in this constraint is not valid.');
+                    return false;
+                }
             }
-
-
         }
-        
+        return true;
     }
 
     /**
@@ -138,7 +139,7 @@ class CSPSolver {
      * and where all constraints are satisfied.
      */
     isSolution(assignment) {
-        return completeAssignment(assignment) && isConsistent(assignment);
+        return this.completeAssignment(assignment) && this.isConsistent(assignment);
     }
 
 }

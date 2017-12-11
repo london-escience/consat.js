@@ -12,7 +12,7 @@
  * source variable as the key and then a list of valid values of the target
  * variable as the value.
  */
-import CSPSolverValueException from './exceptions';
+import { CSPSolverValueException } from './exceptions';
 import * as log from 'loglevel';
 
 class Constraint {
@@ -39,7 +39,7 @@ class Constraint {
                         'domain for variable 1 [' + v1.getName() + ']');
             }
             // Add the current value (key) to the V2toV1 table...
-            for(let val in mappingsV1toV2[key]) {
+            for(let val of mappingsV1toV2[key]) {
                 if(!(val in mappingsV2toV1)) {
                     mappingsV2toV1[val] = [];
                 }
@@ -79,7 +79,7 @@ class Constraint {
     }
 
     /**
-     * Get all the 
+     * Get all the target values for the specified variable and value.
      */
     getTargetValues(vId, vValue) {
         // Check whether we've been passed a value for var1 or var2 and then
@@ -99,7 +99,7 @@ class Constraint {
             return this.mappingsV2toV1[vValue];
         }
         else {
-            throw CSPSolverValueException('Invalid variable name provided.');
+            throw new CSPSolverValueException('Invalid variable name provided.');
         }
     }
 

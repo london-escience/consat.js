@@ -19,7 +19,12 @@ module.exports = {
 				loader: 'babel-loader',
 				exclude: /node_modules/,
 				options: {
-		          presets: ['env']
+		          presets: ['env'],
+		          plugins: [
+		              ['babel-plugin-transform-builtin-extend', 
+		                  {globals: ["Error", "Array"]}
+		              ]
+		          ]
 		        }
 			},
 			{
