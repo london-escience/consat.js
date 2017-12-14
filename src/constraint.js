@@ -12,14 +12,14 @@
  * source variable as the key and then a list of valid values of the target
  * variable as the value.
  */
-import { CSPSolverValueException } from './exceptions';
+import { VariableValueError, InvalidVariableError } from './exceptions';
 import * as log from 'loglevel';
 
 class Constraint {
 
     constructor(v1, v2, mappingsV1toV2) {
         if(v1.getName() === v2.getName()) {
-            throw CSPSolverValueException('The two variables for this ' +
+            throw new VariableValueError('The two variables for this ' +
                     'constraint cannot have the same name.');
         }
 
@@ -34,7 +34,7 @@ class Constraint {
                         'Value [' + key + '] is specified as a mapping key' +
                         ' is not a in the value domain for variable 1 [' +
                         v1.getName() + ']');
-                throw CSPSolverValueException('Value [' + key + '] is ' +
+                throw new VariableValueError('Value [' + key + '] is ' +
                         'specified as a mapping key is not a in the value ' +
                         'domain for variable 1 [' + v1.getName() + ']');
             }
@@ -86,20 +86,20 @@ class Constraint {
         // get the corresponding values from the relevant mapping
         if(vId === this.v1.getId()) {
             if(!(vValue in this.mappingsV1toV2)) {
-                throw CSPSolverValueException('The specified value is not ' +
+                throw new VariableValueError('The specified value is not ' +
                         'a valid value for the variable named.');
             }
             return this.mappingsV1toV2[vValue];
         }
         else if(vId === this.v2.getId()) {
             if(!(vValue in this.mappingsV2toV1)) {
-                throw CSPSolverValueException('The specified value is not ' +
+                throw new VariableValueError('The specified value is not ' +
                         'a valid value for the variable named.');
             }
             return this.mappingsV2toV1[vValue];
         }
         else {
-            throw new CSPSolverValueException('Invalid variable name provided.');
+            throw new InvalidVariableError('Invalid variable name provided.');
         }
     }
 

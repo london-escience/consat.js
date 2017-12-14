@@ -7,7 +7,7 @@
     "build": "WEBPACK_ENV=build webpack",
     "build:dev": "WEBPACK_ENV=build webpack --progress --color --watch",
     "serve": "webpack-dev-server --content-base build/",
-    "test": "ava"
+    "test": "ava --verbose"
   },
   "repository": {
     "type": "git",

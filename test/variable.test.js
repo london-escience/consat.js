@@ -39,7 +39,7 @@ test('domain must be array', t => {
     t.is(err.message, 'Domain must be an array of possible values.');
 });
 
-//Check that we get an error if we create a Variable without an empty domain
+// Check that we get an error if we create a Variable without an empty domain
 test('domain cannot be empty array', t => {
     const err = t.throws(() => {
         const v = new Variable('MyVar', []);
@@ -60,11 +60,22 @@ test('specified id set correctly', t => {
     t.is(v.getId(), 'MyVarID');
 });
 
+// Check that trying to set a value that is not in the domain when creating
+// a variable triggers an error.
+test('create a variable with a value that is not in the domain', t => {
+    const err = t.throws(() => {
+        const v = new Variable('MyVar', ['a','b'], 'notindomain', 'MyVarID');    
+    }, VariableValueError);
+    t.is(err.message, 'The specified value is not in the provided domain ' + 
+            'of values.');
+});
+
+
 // Check that the getters for a populated variable object work.
 test('test variable object getters', t => {
-    const v = new Variable('MyVar', testDomain, 'testvalue', 'MyVarID');
+    const v = new Variable('MyVar', testDomain, 'd', 'MyVarID');
     t.is(v.getName(), 'MyVar');
-    t.is(v.getValue(), 'testvalue');
+    t.is(v.getValue(), 'd');
     t.is(v.getId(), 'MyVarID');
     
     const domain = v.getDomain();

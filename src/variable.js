@@ -5,7 +5,11 @@
  * The variable has a name, a domain and an optional value.
  */
 import uuid from 'uuid/v1.js';
+import * as log from 'loglevel';
 import { VariableValueError } from './exceptions';
+
+const logger = log.noConflict();
+logger.setLevel(logger.levels.DEBUG);
 
 class Variable {
 
@@ -21,6 +25,14 @@ class Variable {
             throw new TypeError('Domain array cannot be empty.');
         }
 
+        // If a value is provided, it must be in the domain!
+        if(value !== null) {
+            if(domain.indexOf(value) === -1) {
+                throw new VariableValueError('The specified value is not ' +
+                        'in the provided domain of values.');
+            }
+        }
+        
         // Assign the variable a unique ID
         if(id === null) this.id = uuid();
         else this.id = id;

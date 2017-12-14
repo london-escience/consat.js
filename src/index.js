@@ -10,8 +10,11 @@
  */
 import Variable from './variable';
 import Constraint from './constraint';
-import { NotImplementedException, InvalidVariableException } from './exceptions';
+import { NotImplementedError, InvalidVariableError } from './exceptions';
 import * as log from 'loglevel';
+
+const logger = log.noConflict();
+logger.setLevel(logger.levels.INFO);
 
 class CSPSolver {
 
@@ -27,25 +30,34 @@ class CSPSolver {
                     'instantiated directly.');
         }
 
-        log.debug('Initialising CSPSolver object...');
+        logger.debug('Initialising CSPSolver object...');
         this._constraints = [];
         this._variables = {};
         this.varConstraintMap = {};
     }
 
     addVariable(v) {
-        log.debug('Adding variable named [' + v.getName() + '] with ID [' +
+        logger.debug('Adding variable named [' + v.getName() + '] with ID [' +
                 v.getId() + '] to var list');
+        logger.debug('Variables list: ' + JSON.stringify(this._variables));
         // Check of this variable has already been added
         if(v.getId() in this._variables) return false;
-        this.variables[v.getId()] = v;
+        this._variables[v.getId()] = v;
         return true;
     }
 
     addConstraint(c) {
-        log.debug('Adding constraint between variable [' + c.getV2Name() +
+        logger.debug('Adding constraint between variable [' + c.getV2Name() +
                 '] and variable [' + c.getV1Name() + '] to constraint list.');
-        this._variables.push(c);
+        // Add the two variables to the list of variables for this constraint
+        // if they are not already present.
+        if(!(c.getV1Name() in this._variables)) {
+            this._variables[c.getV1Name()] = c.getV1();
+        }
+        if(!(c.getV2Name() in this._variables)) {
+            this._variables[c.getV2Name()] = c.getV2();
+        }
+        
         // Add entry to the varConstraintsMap for the variables that this
         // constraint is involved with.
         if(!(c.getV1Id() in this.varConstraintMap)) {
@@ -56,6 +68,8 @@ class CSPSolver {
         }
         this.varConstraintMap[c.getV1Id()].push(c);
         this.varConstraintMap[c.getV2Id()].push(c);
+        
+        return true;
     }
 
     /**
@@ -63,7 +77,7 @@ class CSPSolver {
      * solve must be provided in subclasses of this CSPSolver class
      */
     solve() {
-        throw NotImplementedException('solve() is not implemented in this ' +
+        throw NotImplementedError('solve() is not implemented in this ' +
                 'abstract class - use a concrete subclass providing a ' +
                 'solver implementation.');
     }
@@ -111,24 +125,11 @@ class CSPSolver {
 
                 if(!(otherVar.getValue() in relConst.getTargetValues(
                     v.getId(), v.getValue()))) {
-                    log.debug('The value of the corresponding ' +
+                    logger.debug('The value of the corresponding ' +
                             'variable in this constraint is not valid.');
                     return false;
                 }
             }
-        }
-        return true;
-    }
-
-    /**
-     * Check if the provided assignment is a solution. An assignment that is
-     * a solution is one that is complete (i.e. all variables have values)
-     * and where all constraints are satisfied.
-     */
-    completeAssignment(assignment) {
-        const varList = assignment.getVarList();
-        for(const v in varList) {
-            if(v.getValue() === null) return false;
         }
         return true;
     }
