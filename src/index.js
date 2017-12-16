@@ -91,8 +91,9 @@ class CSPSolver {
     isConsistent(assignment) {
         // Check through each of the constraints to see if we have variables.
         const varList = assignment.getVarList();
+        logger.debug('Value of varlist is: ' + varList);
         const assignedVarMap = {};
-        for(const v in varList) {
+        for(const v of varList) {
             // If the variable provided is not in our list of variables for
             // this solve, then we throw an error.
             if(!(v.getId() in this._variables)) {
@@ -103,18 +104,19 @@ class CSPSolver {
             }
             assignedVarMap[v.getId()] = v;
         }
-        for(const v in varList) {
+        for(const v of varList) {
             // If this variable is not present in any constraints then we
             // can ignore it and continue with the next variable. We can also
             // ignore the variable if it is unset (i.e. value is null)
+            logger.debug('Value of v is: ' + v.getValue());
             if((!(v.getId() in this.varConstraintMap)) ||
-                    v.getValue === null) continue;
+                    v.getValue() === null) continue;
 
             // For a variable that exists in the constraint map, we need to
             // check whether the variable's value is consistent with that of
             // corresponding values of any variables in related constraints
             const relatedConstraints = this.varConstraintMap[v.getId()];
-            for(const relConst in relatedConstraints) {
+            for(const relConst of relatedConstraints) {
                 let otherVar = null;
                 if(relConst.getV1Id() === v.getId()) {
                     otherVar = relConst.getV2();
@@ -122,11 +124,26 @@ class CSPSolver {
                 else {
                     otherVar = relConst.getV1();
                 }
-
-                if(!(otherVar.getValue() in relConst.getTargetValues(
-                    v.getId(), v.getValue()))) {
+                
+                // Now we need to check if the value of "otherVar" is in the
+                // list of target values for v. We need to find otherVar in
+                // the assignment since the instance of the variable with the
+                // value is in the assignment list.
+                const targetVarValue = assignment.getValueForVarById(otherVar.getId())
+                if(targetVarValue === null) {
+                    logger.debug('Target var value is null, don\'t need ' +
+                            'check if the value is consistent.');
+                    continue;
+                }
+                const tgt = relConst.getTargetValues(v.getId(), v.getValue());
+                if(!(tgt.indexOf(assignment.getValueForVarById(otherVar.getId())) >= 0)) {
                     logger.debug('The value of the corresponding ' +
                             'variable in this constraint is not valid.');
+                    logger.debug('Variable value is <', 
+                            assignment.getValueForVarById(otherVar.getId()),
+                           '>, source var is <', v.getId(), ', ', 
+                           v.getValue(), '>, target values are ',
+                           relConst.getTargetValues(v.getId(), v.getValue()));
                     return false;
                 }
             }

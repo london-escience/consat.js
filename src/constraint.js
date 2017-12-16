@@ -15,6 +15,9 @@
 import { VariableValueError, InvalidVariableError } from './exceptions';
 import * as log from 'loglevel';
 
+const logger = log.noConflict();
+logger.setLevel(logger.levels.INFO);
+
 class Constraint {
 
     constructor(v1, v2, mappingsV1toV2) {
@@ -84,15 +87,23 @@ class Constraint {
     getTargetValues(vId, vValue) {
         // Check whether we've been passed a value for var1 or var2 and then
         // get the corresponding values from the relevant mapping
+        logger.debug('Getting target values for vId <', vId, '> with value <',
+                vValue, '>.');
         if(vId === this.v1.getId()) {
             if(!(vValue in this.mappingsV1toV2)) {
+                logger.debug('The specified value <' + vValue + '> is not ' +
+                    'a valid value for the variable with ID <' + vId + '>. ' +
+                    'Mappings are ' + JSON.stringify(this.mappingsV1toV2));
                 throw new VariableValueError('The specified value is not ' +
-                        'a valid value for the variable named.');
+                'a valid value for the variable named.');
             }
             return this.mappingsV1toV2[vValue];
         }
         else if(vId === this.v2.getId()) {
             if(!(vValue in this.mappingsV2toV1)) {
+                logger.debug('The specified value <' + vValue + '> is not ' +
+                        'a valid value for the variable with ID <' + vId + '>. ' +
+                        'Mappings are ' + JSON.stringify(this.mappingsV2toV1));
                 throw new VariableValueError('The specified value is not ' +
                         'a valid value for the variable named.');
             }
