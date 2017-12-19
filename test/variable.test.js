@@ -102,6 +102,13 @@ test('set variable to invalid value', t => {
             'not in the value domain.');
 });
 
+test('set variable value to null (remove any previous value)', t => {
+    const v = new Variable('MyVar', testDomain, null, 'MyVarID');
+    v.setValue('b');
+    v.setValue(null);
+    t.pass();
+})
+
 // Check that the valueInDomain call returns true for a domain value.
 test('check true for value in domain', t => {
     const v = new Variable('MyVar', testDomain, null, 'MyVarID');
@@ -124,4 +131,23 @@ test('create a new variable from an existing one', t => {
     t.is(v.getName(), v2.getName());
     t.is(v.getDomain(), v2.getDomain());
     t.is(v.getValue(), v2.getValue());
+});
+
+test('check that hasValue is correct for a variable with a value', t => {
+    const v = new Variable('MyVar', testDomain, null, 'MyVarID');
+    v.setValue('a');
+    t.is(v.hasValue(), true);
+});
+
+test('check that hasValue is correct for a variable without a value', t => {
+    const v = new Variable('MyVar', testDomain, null, 'MyVarID');
+    t.is(v.hasValue(), false);
+});
+
+test('check that hasValue is correct for a variable with a removed value', t => {
+    const v = new Variable('MyVar', testDomain, null, 'MyVarID');
+    v.setValue('a');
+    t.is(v.hasValue(), true);
+    v.setValue(null);
+    t.is(v.hasValue(), false);
 });

@@ -88,7 +88,7 @@ class Constraint {
         // Check whether we've been passed a value for var1 or var2 and then
         // get the corresponding values from the relevant mapping
         logger.debug('Getting target values for vId <', vId, '> with value <',
-                vValue, '>.');
+            vValue, '>.');
         if(vId === this.v1.getId()) {
             if(!(vValue in this.mappingsV1toV2)) {
                 logger.debug('The specified value <' + vValue + '> is not ' +

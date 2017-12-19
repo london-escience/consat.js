@@ -34,6 +34,7 @@ class CSPSolver {
         this._constraints = [];
         this._variables = {};
         this.varConstraintMap = {};
+        this._solutions = [];
     }
 
     addVariable(v) {
@@ -57,7 +58,7 @@ class CSPSolver {
         if(!(c.getV2Name() in this._variables)) {
             this._variables[c.getV2Name()] = c.getV2();
         }
-        
+
         // Add entry to the varConstraintsMap for the variables that this
         // constraint is involved with.
         if(!(c.getV1Id() in this.varConstraintMap)) {
@@ -68,7 +69,7 @@ class CSPSolver {
         }
         this.varConstraintMap[c.getV1Id()].push(c);
         this.varConstraintMap[c.getV2Id()].push(c);
-        
+
         return true;
     }
 
@@ -76,7 +77,10 @@ class CSPSolver {
      * The solve function is not implemented here - an implementation of
      * solve must be provided in subclasses of this CSPSolver class
      */
-    solve() {
+    solve(initialAssignment=null, getAllSolutions=true) {
+        this.getAllSolutions = getAllSolutions;
+        this.initialAssignment = initialAssignment;
+        this._solutions = [];
         throw NotImplementedError('solve() is not implemented in this ' +
                 'abstract class - use a concrete subclass providing a ' +
                 'solver implementation.');
@@ -97,7 +101,7 @@ class CSPSolver {
             // If the variable provided is not in our list of variables for
             // this solve, then we throw an error.
             if(!(v.getId() in this._variables)) {
-                throw InvalidVariableException('Variable found in the ' +
+                throw InvalidVariableError('Variable found in the ' +
                     'assigned variables with ID [' + v.getId() + '] and ' +
                     'name [' + v.getName() + '] is not registered for ' +
                     'this solver instance.');
@@ -124,12 +128,12 @@ class CSPSolver {
                 else {
                     otherVar = relConst.getV1();
                 }
-                
+
                 // Now we need to check if the value of "otherVar" is in the
                 // list of target values for v. We need to find otherVar in
                 // the assignment since the instance of the variable with the
                 // value is in the assignment list.
-                const targetVarValue = assignment.getValueForVarById(otherVar.getId())
+                const targetVarValue = assignment.getValueForVarById(otherVar.getId());
                 if(targetVarValue === null) {
                     logger.debug('Target var value is null, don\'t need ' +
                             'check if the value is consistent.');
@@ -139,11 +143,11 @@ class CSPSolver {
                 if(!(tgt.indexOf(assignment.getValueForVarById(otherVar.getId())) >= 0)) {
                     logger.debug('The value of the corresponding ' +
                             'variable in this constraint is not valid.');
-                    logger.debug('Variable value is <', 
-                            assignment.getValueForVarById(otherVar.getId()),
-                           '>, source var is <', v.getId(), ', ', 
-                           v.getValue(), '>, target values are ',
-                           relConst.getTargetValues(v.getId(), v.getValue()));
+                    logger.debug('Variable value is <',
+                        assignment.getValueForVarById(otherVar.getId()),
+                        '>, source var is <', v.getId(), ', ',
+                        v.getValue(), '>, target values are ',
+                        relConst.getTargetValues(v.getId(), v.getValue()));
                     return false;
                 }
             }
@@ -157,7 +161,7 @@ class CSPSolver {
      * and where all constraints are satisfied.
      */
     isSolution(assignment) {
-        return this.completeAssignment(assignment) && this.isConsistent(assignment);
+        return assignment.isComplete() && this.isConsistent(assignment);
     }
 
 }

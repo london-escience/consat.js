@@ -149,5 +149,3 @@ test('is partial, invalid assignment consistent with mapping', t => {
     const isconsistent = solver.isConsistent(assignment); 
     t.is(isconsistent, false);
 });
-
-//test.todo();

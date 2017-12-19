@@ -50,6 +50,16 @@ class Assignment {
                 'ID does not exist.');
     }
 
+    // Get the list of unassigned variables for this assignment
+    getUnassignedVariables() {
+        const unassignedVars = [];
+        for(const key in this.varMap) {
+            const v = this.varMap[key];
+            if(!v.hasValue()) unassignedVars.push(v);
+        }
+        return unassignedVars;
+    }
+    
     /**
      * Check if this assignment is complete. An assignment that is
      * complete is one where all the variables in the assignment have values.
@@ -59,6 +69,16 @@ class Assignment {
             if(this.varMap[vId].getValue() === null) return false;
         }
         return true;
+    }
+    
+    static emptyAssignment(variableMap) {
+        const assignmentList = []
+        for(const varId in variableMap) {
+            const newVar = Variable.fromVariablevariableMap[varId]
+            newVar.setValue(null);
+            assignmentList.push(newVar);
+        }
+        return assignmentList;
     }
 
 }

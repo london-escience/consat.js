@@ -2,37 +2,15 @@
  * Custom exceptions for use in the CSPSolver.
  */
 
-class CSPSolverValueError extends Error {
+class CSPSolverValueError extends Error { };
 
-    constructor(...params) {
-        super(...params);
-    }
+class VariableValueError extends Error { };
 
-};
+class InvalidVariableError extends Error { };
 
-class VariableValueError extends Error {
+class InvalidSolutionError extends Error { };
 
-    constructor(...params) {
-        super(...params);
-    }
+class NotImplementedError extends Error { };
 
-};
-
-class InvalidVariableError extends Error {
-
-    constructor(...params) {
-        super(...params);
-    }
-
-};
-
-class NotImplementedError extends Error {
-
-    constructor(...params) {
-        super(...params);
-    }
-
-};
-
-export { CSPSolverValueError, VariableValueError, InvalidVariableError, 
-    NotImplementedError };
+export { CSPSolverValueError, VariableValueError, InvalidVariableError,
+    InvalidSolutionError, NotImplementedError };

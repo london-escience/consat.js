@@ -101,3 +101,35 @@ test('test for a complete assignment with an incomplete input', t => {
     const assignment = new Assignment(varList);
     t.is(assignment.isComplete(), false);
 });
+
+test('get all unassigned variables from an assignment', t => {
+    const v1Assigned = new Variable('MyTestVar1', ['a','b']);
+    const v2Assigned = new Variable('MyTestVar2', ['c','d','e','f','g'], 'e');
+    const v3Assigned = new Variable('MyTestVar3', ['h','i','j','k','l','m'], 'i');
+    const v4Assigned = new Variable('MyTestVar4', ['n','o']);
+    const v5Assigned = new Variable('MyTestVar5', ['p'], 'p');
+    
+    const v1Id = v1Assigned.getId();
+    const v4Id = v4Assigned.getId();
+    
+    const varList = [v1Assigned, v2Assigned, v3Assigned, 
+        v4Assigned, v5Assigned];
+
+    const assignment = new Assignment(varList);
+    const unassigned = assignment.getUnassignedVariables();
+    t.is(unassigned.length, 2);
+    
+    const v1Check = unassigned[0];
+    const v4Check = unassigned[1];
+    
+    t.is(v1Check.getName(), 'MyTestVar1');
+    t.is(v1Check.getId(), v1Id);
+    t.is(v4Check.getName(), 'MyTestVar4');
+    t.is(v4Check.getId(), v4Id);
+});
+
+test.todo('get an empty assignment from a var map that contains no values');
+
+test.todo('get empty assignment from a map of vars that contain some values');
+
+test.todo('get empty assignment from a map of vars that all contain values');

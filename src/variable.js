@@ -32,7 +32,7 @@ class Variable {
                         'in the provided domain of values.');
             }
         }
-        
+
         // Assign the variable a unique ID
         if(id === null) this.id = uuid();
         else this.id = id;
@@ -57,9 +57,13 @@ class Variable {
     getValue() {
         return this.value;
     }
+    
+    hasValue() {
+        return this.value !== null;
+    }
 
     setValue(value) {
-        if(!this.domain.includes(value)) {
+        if(!(this.domain.includes(value) || value === null)) {
             throw new VariableValueError('The value specified for variable' +
                     ' [' + this.id + '] is not in the value domain.');
         }
@@ -76,8 +80,8 @@ class Variable {
      * Create a new Variable object from an existing one
      */
     static fromVariable(v) {
-        return new Variable(v.getName(), v.getDomain(), v.getValue(), 
-                v.getId());
+        return new Variable(v.getName(), v.getDomain(), v.getValue(),
+            v.getId());
     }
 
 }
