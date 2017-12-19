@@ -16,7 +16,7 @@ logger.setLevel(logger.levels.INFO);
  * marker subclass to identify a given assignment as a solution.
  */
 class Solution extends Assignment {
-    
+
     constructor(assignment) {
         super(assignment.getVarList());
         if(!assignment.isComplete()) {
@@ -24,7 +24,7 @@ class Solution extends Assignment {
                 'incomplete. Can\'t create a solution from this assignment.');
         }
     }
-    
+
 }
 
 export default Solution;

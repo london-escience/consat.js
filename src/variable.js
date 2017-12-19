@@ -57,7 +57,7 @@ class Variable {
     getValue() {
         return this.value;
     }
-    
+
     hasValue() {
         return this.value !== null;
     }

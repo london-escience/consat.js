@@ -9,6 +9,7 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, 'lib'),
 		library: 'consat',
+		libraryTarget: 'umd',
 		filename: 'consat.js',
 		sourceMapFilename: 'consat.js.map'
 	},

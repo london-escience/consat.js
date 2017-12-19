@@ -12,7 +12,7 @@ logger.setLevel(logger.levels.INFO);
 class Assignment {
 
     constructor(assignedVariableList) {
-        const varMap = {}
+        const varMap = {};
         for(const v of assignedVariableList) {
             logger.debug('Creating variable...');
             logger.debug('Var name: ' + v.getName());
@@ -27,8 +27,9 @@ class Assignment {
 
     getVarList() {
         const varList = [];
-        for(const key in this.varMap)
+        for(const key in this.varMap) {
             varList.push(this.varMap[key]);
+        }
         return varList;
     }
 
@@ -43,8 +44,9 @@ class Assignment {
     }
 
     getValueForVarById(varId) {
-        if(varId in this.varMap)
-            return this.varMap[varId].getValue()
+        if(varId in this.varMap) {
+            return this.varMap[varId].getValue();
+        }
         // If the variable ID isn't in the map, throw an error.
         throw new VariableValueError('A variable with the specified ' +
                 'ID does not exist.');
@@ -59,7 +61,7 @@ class Assignment {
         }
         return unassignedVars;
     }
-    
+
     /**
      * Check if this assignment is complete. An assignment that is
      * complete is one where all the variables in the assignment have values.
@@ -70,15 +72,24 @@ class Assignment {
         }
         return true;
     }
-    
+
+    printAssignment() {
+        let printStr = '';
+        for(const vId in this.varMap) {
+            printStr += this.varMap[vId].name + ' = ' + this.varMap[vId].value + '\t';
+        }
+        printStr += '\n';
+        return printStr;
+    }
+
     static emptyAssignment(variableMap) {
-        const assignmentList = []
+        const assignmentList = [];
         for(const varId in variableMap) {
-            const newVar = Variable.fromVariablevariableMap[varId]
+            const newVar = Variable.fromVariable(variableMap[varId]);
             newVar.setValue(null);
             assignmentList.push(newVar);
         }
-        return assignmentList;
+        return new Assignment(assignmentList);
     }
 
 }
