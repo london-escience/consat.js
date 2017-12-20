@@ -57,6 +57,21 @@ class BacktrackingSolver extends CSPSolver {
         this.treeLevel = 0;
         const result = this.recursiveSolve(initialAssignment);
         logger.debug('Result: ' + JSON.stringify(result));
+
+        // Format the output data as JSON that we can load in as an object
+        // later in order to test the solver output.
+        function replacer(key, value) {
+            if (key === 'domain') return undefined;
+            else if (key === 'id') return undefined;
+            else return value;
+        }
+
+        logger.debug('{"solutions":[');
+        for(const solution of this._solutions) {
+            logger.debug(JSON.stringify(solution, replacer) + ',');
+        }
+        logger.debug(']}');
+
         return result;
     }
 
