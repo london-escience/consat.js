@@ -13,7 +13,7 @@ import { InvalidVariableError } from './exceptions';
 import * as log from 'loglevel';
 
 const logger = log.noConflict();
-logger.setLevel(logger.levels.DEBUG);
+logger.setLevel(logger.levels.INFO);
 
 class CSPSolver {
 

@@ -17,7 +17,7 @@ import Assignment from './assignment';
 import Solution from './solution';
 import * as log from 'loglevel';
 
-const logger = log.noConflict();
+const logger = log.getLogger('backtracking');
 logger.setLevel(logger.levels.DEBUG);
 
 class BacktrackingSolver extends CSPSolver {
@@ -30,7 +30,6 @@ class BacktrackingSolver extends CSPSolver {
     // this.varConstraintMap = {}; - a map of variable ID to an array of
     //                               constraints with which that variable
     //                               is involved.
-
     constructor(...params) {
         super(...params);
         logger.debug('Creating a backtracking solver instance...');
@@ -55,12 +54,15 @@ class BacktrackingSolver extends CSPSolver {
         }
         logger.debug('About to start solve with initial assignment:\n' +
             initialAssignment.printAssignment());
+        this.treeLevel = 0;
         const result = this.recursiveSolve(initialAssignment);
-        logger.info('Result: ' + JSON.stringify(result));
+        logger.debug('Result: ' + JSON.stringify(result));
         return result;
     }
 
     recursiveSolve(assignment) {
+        this.treeLevel++;
+        logger.debug('AT TREE LEVEL: ' + this.treeLevel);
         if(assignment.isComplete()) return new Solution(assignment);
         const v = this.getUnassignedVar(assignment);
         // We now process the selected unassigned variable working through
@@ -69,16 +71,24 @@ class BacktrackingSolver extends CSPSolver {
         const updatedDomain = this.orderDomainValues(varDomain);
         for(const item of updatedDomain) {
             v.setValue(item);
+            logger.debug('Assignment is: ' + assignment.printAssignment());
             if(this.isConsistent(assignment)) {
                 const result = this.recursiveSolve(assignment);
-                if(this.isSolution(result)) return result;
+                this.treeLevel--;
+                logger.debug('AT TREE LEVEL: ' + this.treeLevel);
+                logger.debug('TYPE OF RESULT IS: ' + result.constructor.name);
+                if(this.isSolution(result)) {
+                    logger.trace('RESULT TO RETURN: ' + result.printAssignment());
+                    // return result;
+                    this._solutions.push(new Solution(result));
+                }
                 v.setValue(null);
             }
             else {
                 v.setValue(null);
             }
         }
-        return false;
+        return assignment;
     }
 
     /**
