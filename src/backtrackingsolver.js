@@ -18,7 +18,7 @@ import Solution from './solution';
 import * as log from 'loglevel';
 
 const logger = log.getLogger('backtracking');
-logger.setLevel(logger.levels.DEBUG);
+logger.setLevel(logger.levels.INFO);
 
 class BacktrackingSolver extends CSPSolver {
 
