@@ -97,8 +97,10 @@ class CSPSolver {
         for(const v of varList) {
             // If the variable provided is not in our list of variables for
             // this solve, then we throw an error.
+            logger.trace('Checking for existence of variable <' + v.getId() 
+                + '> with name <' + v.getName() + '>');
             if(!(v.getId() in this._variables)) {
-                throw InvalidVariableError('Variable found in the ' +
+                throw new InvalidVariableError('Variable found in the ' +
                     'assigned variables with ID [' + v.getId() + '] and ' +
                     'name [' + v.getName() + '] is not registered for ' +
                     'this solver instance.');

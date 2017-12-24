@@ -95,7 +95,15 @@ class BacktrackingSolver extends CSPSolver {
                 if(this.isSolution(result)) {
                     logger.trace('RESULT TO RETURN: ' + result.printAssignment());
                     // return result;
-                    this._solutions.push(new Solution(result));
+                    if(this.getAllSolutions) {
+                        this._solutions.push(new Solution(result));    
+                    }
+                    else {
+                        const localSolution = new Solution(result); 
+                        this._solutions.push(localSolution);
+                        return localSolution;
+                    }
+                    
                 }
                 v.setValue(null);
             }
