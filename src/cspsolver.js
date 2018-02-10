@@ -10,6 +10,7 @@
  * variables with finite domains.
  */
 import { InvalidVariableError } from './exceptions';
+import CSPDefinition from './cspdefinition.js';
 import * as log from 'loglevel';
 
 const logger = log.noConflict();
@@ -22,8 +23,12 @@ class CSPSolver {
      * specific solver implementation and this class contains only common
      * top-level implementation for CSP solvers. new.target is therefore used
      * to check if an attempt is made to instantiate this class directly.
+     *
+     * The optional parameter is a CSPDefintion object containing a list of
+     * variables and constraints that can be presupplied to configure the
+     * class rather than using addVariable and addConstraint.
      */
-    constructor() {
+    constructor(definition = null) {
         logger.debug('Constructor name: ' + this.constructor);
         if(this.constructor === CSPSolver) {
             throw TypeError('CSPSolver is an abstract class and can\'t be ' +
@@ -31,10 +36,15 @@ class CSPSolver {
         }
 
         logger.debug('Initialising CSPSolver object...');
-        this._constraints = [];
         this._variables = {};
         this.varConstraintMap = {};
+        this._constraints = [];
         this._solutions = [];
+
+        if(definition != null) {
+            logger.debug('Processing problem definition in constructor...');
+            this._processProblemDefintion(definition);
+        }
     }
 
     addVariable(v) {
@@ -161,6 +171,31 @@ class CSPSolver {
      */
     isSolution(assignment) {
         return assignment.isComplete() && this.isConsistent(assignment);
+    }
+
+    /**
+     * Process a problem definition object, setting the variables and
+     * constraints for this CSP solver instance from the definition provided.
+     */
+    _processProblemDefintion(definition) {
+        // Check that we've been given a valid CSPDefinition object
+        if(!(definition instanceof CSPDefinition)) {
+            logger.error('An invalid object has been provided as a ' +
+                    ' problem defintion, CSPDefinition object required. ' +
+                    'Ignoring problem definition processing.');
+            return;
+        }
+
+        logger.debug('Processing problem defintion with <' +
+                definition.numVariables() + '> variables and <' +
+                definition.numConstraints() + '> constraints.');
+
+        for(const variable of definition.getVariables()) {
+            this.addVariable(variable);
+        }
+        for(const constraint of definition.getConstraints()) {
+            this.addConstraint(constraint);
+        }
     }
 
 }
