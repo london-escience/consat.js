@@ -1,0 +1,11 @@
+{"test_plan":[
+  {"vars":10, "const_2":3, "const_3":1, "const_4":0},
+  {"vars":15, "const_2":3, "const_3":2, "const_4":0},
+  {"vars":20, "const_2":3, "const_3":2, "const_4":1},
+  {"vars":30, "const_2":5, "const_3":3, "const_4":2},
+  {"vars":50, "const_2":8, "const_3":4, "const_4":4},
+  {"vars":100, "const_2":12, "const_3":8, "const_4":6},
+  {"vars":200, "const_2":24, "const_3":16, "const_4":12},
+  {"vars":500, "const_2":100, "const_3":50, "const_4":30},
+  {"vars":1000, "const_2":200, "const_3":100, "const_4":60}
+]}
