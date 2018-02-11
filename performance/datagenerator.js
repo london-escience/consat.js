@@ -3,6 +3,9 @@
  */
 import * as log from 'loglevel';
 import uuid from 'uuid/v1.js';
+import Variable from '../src/variable.js';
+import Constraint from '../src/constraint.js';
+const Chance = require('chance');
 
 const logger = log.noConflict();
 logger.setLevel(logger.levels.INFO);
@@ -21,7 +24,7 @@ class CSPDataGenerator {
         }
         const testPlan = testPlanFile['testPlan'];
         logger.debug('Test plan contains <' + testPlan.length + '> tests.');
-        this.testPlan = {};
+        this.testPlan = {'choicesPerVar': testPlanFile['choicesPerVar']};
         for(const item of testPlan) {
             this.testPlan[uuid()] = item;
         }
@@ -32,6 +35,11 @@ class CSPDataGenerator {
         // UUID can be used to access the data set via getDataSetById().
         this.testData = {};
         const testPlanIds = Object.keys(this.testPlan);
+        const index = testPlanIds.indexOf('choicesPerVar');
+        if(index >= 0) {
+            testPlanIds.splice(index, 1);
+        }
+        logger.debug('IDs: ' + JSON.stringify(testPlanIds));
         for(const id of testPlanIds) {
             const numChoices = this.testPlan['choicesPerVar'];
             const numVars = this.testPlan[id]['vars'];
@@ -68,6 +76,40 @@ class CSPDataGenerator {
                 '> vars, <' + numChoices + '> choices per var and with ' +
                 '<' + c2 + ', ' + c3 + ', ' + c4 + '> 2, 3, 4-way ' +
                 'constraints respectively.');
+
+        const chance = new Chance();
+
+        const variables = [];
+        for(let i = 0; i < numVars; i++) {
+            const name = 'var-' + (i + 1);
+            const domain = [];
+            for(let j = 0; j < numChoices; j++) {
+                domain.push(chance.word());
+            }
+            variables.push(new Variable(name, domain));
+        }
+
+        for(const v of variables) {
+            logger.debug('Variable <' + v.getId() + ', ' + v.getName() +
+                    '>: ' + JSON.stringify(v.getDomain()));
+        }
+        
+        // Now we create some constraints - initially starting with just the
+        // pairwise constraints.
+        logger.debug('We need to create <' + c2 + '> pairwise constraints.');
+        for(let i = 0; i < c2; i++) {
+            // Remove two variables at random from the list of variables
+            const v1 = variables.splice(Math.floor(Math.random()*variables.length), 1);
+            const v2 = variables.splice(Math.floor(Math.random()*variables.length), 1);
+            // Now create mappings between each of the values for v1 and a 
+            // subset of the values for v2.
+            const mapping = {}
+            for(const item of v1.getDomain()) {
+                const targets = [];
+                
+            }
+        }
+        
     }
 
 }
