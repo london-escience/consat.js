@@ -1,4 +1,4 @@
-{"test_plan":[
+{"testPlan":[
   {"vars":10, "const_2":3, "const_3":1, "const_4":0},
   {"vars":15, "const_2":3, "const_3":2, "const_4":0},
   {"vars":20, "const_2":3, "const_3":2, "const_4":1},
@@ -8,4 +8,4 @@
   {"vars":200, "const_2":24, "const_3":16, "const_4":12},
   {"vars":500, "const_2":100, "const_3":50, "const_4":30},
   {"vars":1000, "const_2":200, "const_3":100, "const_4":60}
-]}
+], "choicesPerVar": 8}

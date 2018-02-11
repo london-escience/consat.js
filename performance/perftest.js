@@ -4,10 +4,19 @@
  */
 import * as log from 'loglevel';
 import CSPDataGenerator from './datagenerator.js';
+const testPlan = require('./test_data_plan.json');
 
 const logger = log.noConflict();
-logger.setLevel(logger.levels.INFO);
+logger.setLevel(logger.levels.DEBUG);
+main();
 
-logger.debug('Running command-line performance test utility.');
-// Load the data file and run the test data generator.
-const dataGen = CSPDataGenerator('');
+function main() {
+    logger.debug('Running command-line performance test utility.');
+    // Load the data file and run the test data generator.
+    const dataGen = new CSPDataGenerator(testPlan);
+    if(dataGen == null) {
+        logger.error('An error occurred creating the data generator.');
+        return;
+    }
+    logger.debug('Data generated successfully.');
+}
