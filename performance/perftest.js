@@ -39,4 +39,14 @@ function main() {
     logger.debug('Initial assignment: ' + JSON.stringify(initialAssignment));
     const solutions = solver.solve(initialAssignment);
     logger.debug('Received <' + solutions.length + '> solutions.');
+    let i = 1;
+    for(const sol of solutions) {
+        let str = 'Solution ' + i + ': \t';
+        for(const v of sol.getVarList()) {
+            str += ('<' + v.getName() + ', ' + v.getValue() + '> ');
+        }
+        logger.debug(str);
+        i++;
+    }
+    
 }

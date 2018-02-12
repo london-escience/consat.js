@@ -57,7 +57,7 @@ class Constraint {
         // empty entries to the V2->V1 mapping that was generated above...
         const V2toV1keys = Object.keys(mappingsV2toV1);
         for(const domainVal of v2.getDomain()) {
-            if(V2toV1keys.indexOf(domainVal) == -1) {
+            if(V2toV1keys.indexOf(domainVal) === -1) {
                 mappingsV2toV1[domainVal] = [];
             }
         }

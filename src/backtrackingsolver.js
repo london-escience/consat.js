@@ -72,7 +72,8 @@ class BacktrackingSolver extends CSPSolver {
         }
         logger.debug(']}');
 
-        return result;
+        if(!getAllSolutions) this._solutions.push(result);
+        return this._solutions;
     }
 
     recursiveSolve(assignment) {
