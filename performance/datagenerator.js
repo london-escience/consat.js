@@ -5,6 +5,7 @@ import * as log from 'loglevel';
 import uuid from 'uuid/v1.js';
 import Variable from '../src/variable.js';
 import Constraint from '../src/constraint.js';
+import CSPDefinition from '../src/cspdefinition.js';
 const Chance = require('chance');
 
 const logger = log.noConflict();
@@ -80,6 +81,7 @@ class CSPDataGenerator {
         const chance = new Chance();
 
         const variables = [];
+        const constraints = [];
         for(let i = 0; i < numVars; i++) {
             const name = 'var-' + (i + 1);
             const domain = [];
@@ -93,23 +95,47 @@ class CSPDataGenerator {
             logger.debug('Variable <' + v.getId() + ', ' + v.getName() +
                     '>: ' + JSON.stringify(v.getDomain()));
         }
-        
+
         // Now we create some constraints - initially starting with just the
         // pairwise constraints.
         logger.debug('We need to create <' + c2 + '> pairwise constraints.');
         for(let i = 0; i < c2; i++) {
             // Remove two variables at random from the list of variables
-            const v1 = variables.splice(Math.floor(Math.random()*variables.length), 1);
-            const v2 = variables.splice(Math.floor(Math.random()*variables.length), 1);
-            // Now create mappings between each of the values for v1 and a 
+            const v1 = variables.splice(Math.floor(Math.random() * variables.length), 1)[0];
+            const v2 = variables.splice(Math.floor(Math.random() * variables.length), 1)[0];
+            // Now create mappings between each of the values for v1 and a
             // subset of the values for v2.
-            const mapping = {}
+            const mapping = {};
+            const choices = v2.getDomain();
             for(const item of v1.getDomain()) {
                 const targets = [];
-                
+                // For this item of the domain of v1 prepare a set of target
+                // values by selecting a subset of values from v2. We pick a
+                // random number of values between 1 and half the number of
+                // total values.
+                const numTargetOptions = Math.floor(Math.random() * (numChoices / 2)) + 1;
+                logger.debug('Picking <' + numTargetOptions + '> target ' +
+                        'choices for source value <' + item + '>');
+                const choiceIndexes = [];
+                for(let j = 0; j < choices.length; j++) {
+                    choiceIndexes.push(j);
+                }
+                for(let j = 0; j < numTargetOptions; j++) {
+                    // Pick a random value from choice indexes and remove it
+                    // Use this value as the index for the choices array and
+                    // add the value from the array to targets.
+                    const idx = choiceIndexes.splice(Math.floor(Math.random() * choiceIndexes.length), 1)[0];
+                    targets.push(choices[idx]);
+                }
+                mapping[item] = targets;
+                logger.debug('\t\tPicked <' + JSON.stringify(targets) + '>');
             }
+            constraints.push(new Constraint(v1, v2, mapping));
         }
-        
+
+        // We can now create the constraint problem definition object with
+        // list of variables and constraints.
+        return new CSPDefinition(variables, constraints);
     }
 
 }
