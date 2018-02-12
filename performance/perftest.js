@@ -9,7 +9,7 @@ import Assignment from '../src/assignment.js';
 const testPlan = require('./test_data_plan.json');
 
 const logger = log.noConflict();
-logger.setLevel(logger.levels.DEBUG);
+logger.setLevel(logger.levels.INFO);
 main();
 
 function main() {
@@ -33,20 +33,29 @@ function main() {
     // selections until we have a complete and valid setup with all variables
     // having values defined.
     // DEBUGGING - start with just the first definition
-    const def = dataObjects[0];
-    const solver = new BacktrackingSolver(def);
-    const initialAssignment = Assignment.emptyAssignment(def.getVariableMap());
-    logger.debug('Initial assignment: ' + JSON.stringify(initialAssignment));
-    const solutions = solver.solve(initialAssignment);
-    logger.debug('Received <' + solutions.length + '> solutions.');
-    let i = 1;
-    for(const sol of solutions) {
-        let str = 'Solution ' + i + ': \t';
-        for(const v of sol.getVarList()) {
-            str += ('<' + v.getName() + ', ' + v.getValue() + '> ');
+    // const def = dataObjects[0];
+
+    let testNum = 0;
+    for(const def of dataObjects) {
+        logger.info('Test with <' + def.numVariables() + '> variables ' +
+                'and <' + testPlan['testPlan'][testNum]['const_2'] + ', ' +
+                testPlan['testPlan'][testNum]['const_3'] + ', ' +
+                testPlan['testPlan'][testNum]['const_4'] + '> 2, 3 and ' +
+                '4-way constraints:');
+        const solver = new BacktrackingSolver(def);
+        const initialAssignment = Assignment.emptyAssignment(def.getVariableMap());
+        logger.debug('Initial assignment: ' + JSON.stringify(initialAssignment));
+        const solutions = solver.solve(initialAssignment);
+        logger.info('\tReceived <' + solutions.length + '> solutions.\n');
+        let i = 1;
+        for(const sol of solutions) {
+            let str = '\tSolution ' + i + ': \t';
+            for(const v of sol.getVarList()) {
+                str += ('<' + v.getName() + ', ' + v.getValue() + '> ');
+            }
+            logger.debug(str);
+            i++;
         }
-        logger.debug(str);
-        i++;
+        testNum++;
     }
-    
 }
