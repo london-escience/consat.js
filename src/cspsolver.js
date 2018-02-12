@@ -190,7 +190,7 @@ class CSPSolver {
                 definition.numVariables() + '> variables and <' +
                 definition.numConstraints() + '> constraints.');
 
-        for(const variable of definition.getVariables()) {
+        for(const variable of definition.getVariablesAsList()) {
             this.addVariable(variable);
         }
         for(const constraint of definition.getConstraints()) {

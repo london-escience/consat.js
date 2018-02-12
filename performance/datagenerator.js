@@ -29,7 +29,9 @@ class CSPDataGenerator {
         for(const item of testPlan) {
             this.testPlan[uuid()] = item;
         }
+    }
 
+    generateTestData() {
         // We now want to prepare a CSPDefinition object for each of the
         // entries in the test plan. We then return a dict with a uuid key
         // and the row from the test plan for each of the definitions. The
@@ -50,7 +52,7 @@ class CSPDataGenerator {
             this.testData[id] = this._generateTestData(numVars, numChoices,
                 c2, c3, c4);
         }
-        return this.testPlan;
+        return this.testData;
     }
 
     getDataSetById(id) {
@@ -86,7 +88,12 @@ class CSPDataGenerator {
             const name = 'var-' + (i + 1);
             const domain = [];
             for(let j = 0; j < numChoices; j++) {
-                domain.push(chance.word());
+                let chanceWord = chance.word();
+                // Ensure that we don't have duplicates in the domain
+                while(domain.indexOf(chanceWord) >= 0) {
+                    chanceWord = chance.word();
+                }
+                domain.push(chanceWord);
             }
             variables.push(new Variable(name, domain));
         }
@@ -98,11 +105,12 @@ class CSPDataGenerator {
 
         // Now we create some constraints - initially starting with just the
         // pairwise constraints.
+        const varTmp = variables.slice(0);
         logger.debug('We need to create <' + c2 + '> pairwise constraints.');
         for(let i = 0; i < c2; i++) {
             // Remove two variables at random from the list of variables
-            const v1 = variables.splice(Math.floor(Math.random() * variables.length), 1)[0];
-            const v2 = variables.splice(Math.floor(Math.random() * variables.length), 1)[0];
+            const v1 = varTmp.splice(Math.floor(Math.random() * varTmp.length), 1)[0];
+            const v2 = varTmp.splice(Math.floor(Math.random() * varTmp.length), 1)[0];
             // Now create mappings between each of the values for v1 and a
             // subset of the values for v2.
             const mapping = {};
@@ -135,6 +143,25 @@ class CSPDataGenerator {
 
         // We can now create the constraint problem definition object with
         // list of variables and constraints.
+        logger.debug('List of variables:');
+        for(const v of variables) {
+            logger.debug('\tVariable: <' + v.getId() + '>: ' + v.getName());
+        }
+        for(const c of constraints) {
+            logger.debug('\tConstraint v1: <' + c.getV1Name() + ', ' +
+                    c.getV1Id() + '>     v2: <' + c.getV2Name() + ', ' +
+                    c.getV2Id() + '>.');
+            const v1Vals = c.getV1().getDomain();
+            const v2Vals = c.getV2().getDomain();
+            logger.debug('\tMappings V1: ');
+            for(const val of v1Vals) {
+                logger.debug('\t\t<' + val + '>: ' + JSON.stringify(c.getTargetValues(c.getV1Id(), val)));
+            }
+            logger.debug('\tMappings V2: ');
+            for(const val of v2Vals) {
+                logger.debug('\t\t<' + val + '>: ' + JSON.stringify(c.getTargetValues(c.getV2Id(), val)));
+            }
+        }
         return new CSPDefinition(variables, constraints);
     }
 

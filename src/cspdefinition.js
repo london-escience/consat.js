@@ -47,6 +47,33 @@ class CSPDefinition {
         }
     }
 
+    /**
+     * Returns an array of the variables with no specific ordering
+     */
+    getVariablesAsList() {
+        const varList = [];
+        for(const key of Object.keys(this._variables)) {
+            varList.push(this._variables[key]);
+        }
+        return varList;
+    }
+
+    getVariableMap() {
+        return this._variables;
+    }
+
+    getConstraints() {
+        return this._constraints;
+    }
+
+    numVariables() {
+        return Object.keys(this._variables).length;
+    }
+
+    numConstraints() {
+        return this._constraints.length;
+    }
+
 }
 
 export default CSPDefinition;

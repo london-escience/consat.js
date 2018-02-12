@@ -50,6 +50,18 @@ class Constraint {
             }
         }
 
+        // In theory this shouldn't happen but its possible (especially when
+        // generating random variable data) that there are values in the
+        // domain of one variable that have no mapping to a value in the
+        // domain of the other variable. In this case, we may need to add
+        // empty entries to the V2->V1 mapping that was generated above...
+        const V2toV1keys = Object.keys(mappingsV2toV1);
+        for(const domainVal of v2.getDomain()) {
+            if(V2toV1keys.indexOf(domainVal) == -1) {
+                mappingsV2toV1[domainVal] = [];
+            }
+        }
+
         // Store class variables
         this.v1 = v1;
         this.v2 = v2;
