@@ -41,6 +41,11 @@ class CSPSolver {
         this._constraints = [];
         this._solutions = [];
 
+        // When this option is true, we remove unconstrained variables from
+        // the processing since they can take any one of their values
+        // regardless of what is set elsewhere.
+        this.ignoreUnconstrained = true;
+
         if(definition != null) {
             logger.debug('Processing problem definition in constructor...');
             this._processProblemDefintion(definition);
@@ -91,6 +96,21 @@ class CSPSolver {
         this.getAllSolutions = getAllSolutions;
         this.initialAssignment = initialAssignment;
         this._solutions = [];
+
+        if(this.ignoreUnconstrained) {
+            // Remove unconstrained variables from the variable list.
+            logger.info('<' + Object.keys(this._variables).length +
+                    '> variables before removing unconstrained vars');
+            const newVariables = {};
+            for(const key in this._variables) {
+                if(this._variables[key].getId() in this.varConstraintMap) {
+                    newVariables[key] = this._variables[key];
+                }
+            }
+            this._variables = newVariables;
+            logger.info('<' + Object.keys(this._variables).length +
+                '> variables after removing unconstrained vars');
+        }
     }
 
     /**

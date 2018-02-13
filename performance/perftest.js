@@ -37,7 +37,8 @@ function main() {
 
     let testNum = 0;
     for(const def of dataObjects) {
-        logger.info('Test with <' + def.numVariables() + '> variables ' +
+        logger.info('Test with <' + def.numVariables() + '> variables (<' +
+                testPlan['choicesPerVar'] + '> choices per variable) ' +
                 'and <' + testPlan['testPlan'][testNum]['const_2'] + ', ' +
                 testPlan['testPlan'][testNum]['const_3'] + ', ' +
                 testPlan['testPlan'][testNum]['const_4'] + '> 2, 3 and ' +

@@ -48,6 +48,8 @@ class BacktrackingSolver extends CSPSolver {
      */
     solve(initialAssignment = null, getAllSolutions = true) {
         super.solve(initialAssignment, getAllSolutions);
+        logger.info('<' + Object.keys(this._variables).length +
+            '> variables when back in backtracking solver...');
         if(initialAssignment === null) {
             // Prepare a blank initial assignment
             initialAssignment = Assignment.emptyAssignment(this._variables);
