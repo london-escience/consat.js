@@ -2,7 +2,7 @@
   "name": "consat.js",
   "version": "0.0.1",
   "description": "A simple JavaScript constraint satisfaction solver library",
-  "main": "index.js",
+  "main": "dist/consat.js",
   "scripts": {
     "build": "WEBPACK_ENV=build webpack",
     "build:dev": "WEBPACK_ENV=build webpack --progress --color --watch",

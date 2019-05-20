@@ -7,7 +7,7 @@ module.exports = {
 	},
 	devtool: 'source-map',
 	output: {
-		path: path.join(__dirname, 'lib'),
+		path: path.join(__dirname, 'dist'),
 		library: 'consat',
 		libraryTarget: 'umd',
 		filename: 'consat.js',
