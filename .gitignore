@@ -61,4 +61,7 @@ typings/
 .project
 .settings/
 
+# VSCode files
+.vscode/
+
 lib/

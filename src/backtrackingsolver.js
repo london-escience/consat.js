@@ -89,21 +89,22 @@ class BacktrackingSolver extends CSPSolver {
             logger.debug('Assignment is: ' + assignment.printAssignment());
             if(this.isConsistent(assignment)) {
                 const result = this.recursiveSolve(assignment);
+                // If we're only getting a single result then we receive null here
+                // so send null back to exit from the recursion stack
+                // FIXME: The return is inconsistent here, if we're getting all solutions
+                // then an assignment is returned, if only a single solution has been requested
+                // then we return for now. This satisfies the tests and is ok for now but may
+                // cause issues with different intended uses of the API so needs resolving.
+                if(result === null) return null;
                 this.treeLevel--;
                 logger.debug('AT TREE LEVEL: ' + this.treeLevel);
                 logger.debug('TYPE OF RESULT IS: ' + result.constructor.name);
                 if(this.isSolution(result)) {
                     logger.trace('RESULT TO RETURN: ' + result.printAssignment());
-                    // return result;
-                    if(this.getAllSolutions) {
-                        this._solutions.push(new Solution(result));    
+                    this._solutions.push(new Solution(result));
+                    if(!this.getAllSolutions) {
+                        return null;
                     }
-                    else {
-                        const localSolution = new Solution(result); 
-                        this._solutions.push(localSolution);
-                        return localSolution;
-                    }
-                    
                 }
                 v.setValue(null);
             }

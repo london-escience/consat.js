@@ -14,6 +14,7 @@ import Constraint from './constraint';
 import Assignment from './assignment';
 import Solution from './solution';
 import BacktrackingSolver from './backtrackingsolver';
+import { InvalidVariableError } from './exceptions';
 
 export { CSPSolver, Variable, Constraint, BacktrackingSolver, Assignment,
-    Solution };
+    Solution, InvalidVariableError };

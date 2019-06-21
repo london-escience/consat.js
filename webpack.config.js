@@ -14,13 +14,13 @@ module.exports = {
 		sourceMapFilename: 'consat.js.map'
 	},
 	module: {
-		loaders: [
+		rules: [
 			{
 				test: /\.js$/,
 				loader: 'babel-loader',
 				exclude: /node_modules/,
 				options: {
-		          presets: ['env'],
+		          presets: ['@babel/preset-env'],
 		          plugins: [
 		              ['babel-plugin-transform-builtin-extend', 
 		                  {globals: ["Error", "Array"]}
@@ -35,5 +35,6 @@ module.exports = {
 			}
 		]
 	},
-	plugins: []
-}
+	plugins: [],
+        mode: 'production'
+};
